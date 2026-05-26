@@ -82,7 +82,7 @@ const ProjectManager = {
             container.html(`
                 <div class="empty-project glass-card">
                     <h3>Start Building Your Project Documentation</h3>
-                    <p>Add sections to organize your content, tutorials, and notes.</p>
+                    <p>Create sections to organize your content, tutorials, code examples, and notes. Each section can contain rich text, images, code blocks, and more.</p>
                     <button class="btn btn-primary add-section-btn">
                         <i class="icon-plus"></i> Add First Section
                     </button>
@@ -135,7 +135,7 @@ const ProjectManager = {
     
     renderSectionContent: function(content) {
         if (!content || content.length === 0) {
-            return '<div class="empty-content">Click "Add Content" to start adding content to this section.</div>';
+            return '<div class="empty-content">Click "Add Content" to start adding rich text, images, code blocks, or other content types to this section.</div>';
         }
         
         let html = '';
@@ -308,13 +308,13 @@ const ProjectManager = {
         // Show content type selector
         const selector = $(`
             <div class="content-type-selector glass-card">
-                <h4>Add Content</h4>
+                <h4>Choose Content Type</h4>
                 <div class="content-types">
                     <button class="content-type-btn" data-type="text">
                         <i class="icon-text"></i> Rich Text
                     </button>
                     <button class="content-type-btn" data-type="subtitle">
-                        <i class="icon-heading"></i> Subtitle
+                        <i class="icon-heading"></i> Heading
                     </button>
                     <button class="content-type-btn" data-type="code">
                         <i class="icon-code"></i> Code Block
@@ -346,22 +346,28 @@ const ProjectManager = {
         
         switch (type) {
             case 'text':
-                element = $('<div class="content-item" data-type="text"><div class="rich-editor" contenteditable="true">Start typing...</div></div>');
+                element = $('<div class="content-item" data-type="text"><div class="rich-editor" contenteditable="true">Start typing your content here...</div></div>');
                 break;
             case 'subtitle':
-                element = $('<div class="content-item" data-type="subtitle"><h4 class="subtitle-element" contenteditable="true">Enter subtitle...</h4></div>');
+                element = $('<div class="content-item" data-type="subtitle"><h4 class="subtitle-element" contenteditable="true">Enter heading text...</h4></div>');
                 break;
             case 'code':
                 element = $(`
                     <div class="content-item" data-type="code">
                         <div class="code-element">
-                            <pre><code contenteditable="true">// Enter your code here</code></pre>
+                            <pre><code contenteditable="true">// Enter your code here
+function example() {
+    console.log('Hello World!');
+}</code></pre>
                             <select class="code-language-select">
                                 <option value="javascript">JavaScript</option>
                                 <option value="html">HTML</option>
                                 <option value="css">CSS</option>
                                 <option value="php">PHP</option>
                                 <option value="python">Python</option>
+                                <option value="sql">SQL</option>
+                                <option value="bash">Bash</option>
+                                <option value="json">JSON</option>
                                 <option value="text">Plain Text</option>
                             </select>
                         </div>
@@ -375,7 +381,8 @@ const ProjectManager = {
                             <input type="file" class="image-input" accept="image/*" />
                             <div class="upload-placeholder">
                                 <i class="icon-image"></i>
-                                <p>Click to upload an image</p>
+                                <p>Click to upload an image or drag & drop</p>
+                                <small>Supports: JPG, PNG, GIF, WebP (Max 5MB)</small>
                             </div>
                         </div>
                     </div>

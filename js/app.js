@@ -110,7 +110,7 @@ function createProject() {
     };
     
     if (!formData.title.trim()) {
-        showNotification('Please enter a project title', 'error');
+        showNotification('Project title is required', 'error');
         return;
     }
     
@@ -133,11 +133,11 @@ function createProject() {
                     location.reload();
                 }, 1000);
             } else {
-                showNotification(response.data || 'Error creating project', 'error');
+                showNotification(response.data || 'Failed to create project', 'error');
             }
         },
         error: function() {
-            showNotification('Network error. Please try again.', 'error');
+            showNotification('Network error occurred. Please try again.', 'error');
         },
         complete: function() {
             submitBtn.text(originalText).prop('disabled', false);

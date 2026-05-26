@@ -1,0 +1,31 @@
+[mysqld]
+# Оптимизация для разработки
+innodb_buffer_pool_size = 128M
+innodb_log_file_size = 64M
+innodb_flush_log_at_trx_commit = 2
+innodb_flush_method = O_DIRECT
+
+# Улучшение производительности запросов
+query_cache_type = 1
+query_cache_size = 32M
+query_cache_limit = 2M
+
+# Настройки для подключений
+max_connections = 100
+wait_timeout = 600
+interactive_timeout = 600
+
+# Настройки для загрузки файлов
+max_allowed_packet = 64M
+
+# Кодировка по умолчанию
+character_set_server = utf8mb4
+collation_server = utf8mb4_unicode_ci
+
+# Логи (отключаем для производительности в dev среде)
+general_log = 0
+slow_query_log = 0
+
+# Временные таблицы
+tmp_table_size = 32M
+max_heap_table_size = 32M

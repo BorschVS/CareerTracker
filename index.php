@@ -52,15 +52,18 @@ get_header(); ?>
         <form id="create-project-form">
             <div class="form-group">
                 <label for="project-title">Project Title</label>
-                <input type="text" id="project-title" name="project_title" required>
+                <input type="text" id="project-title" name="project_title" required 
+                       placeholder="Enter project title...">
             </div>
             <div class="form-group">
                 <label for="project-description">Description</label>
-                <textarea id="project-description" name="project_description"></textarea>
+                <textarea id="project-description" name="project_description"
+                          placeholder="Brief project description..."></textarea>
             </div>
             <div class="form-group">
                 <label for="github-url">GitHub URL (Optional)</label>
-                <input type="url" id="github-url" name="github_url">
+                <input type="url" id="github-url" name="github_url"
+                       placeholder="https://github.com/username/repository">
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Create Project</button>

@@ -1,40 +1,72 @@
-version: '3.8'
-
 services:
+  # WordPress сервис
   wordpress:
-    image: wordpress:6.3-apache
+    image: wordpress:6.4-apache
+    container_name: career_tracker_wp
     restart: always
     ports:
       - "8080:80"
     environment:
+      # Настройки подключения к БД
       WORDPRESS_DB_HOST: db:3306
       WORDPRESS_DB_USER: wordpress
       WORDPRESS_DB_PASSWORD: wordpress_password
       WORDPRESS_DB_NAME: wordpress
+      
+      # Настройки для разработки
       WORDPRESS_DEBUG: 1
       WORDPRESS_DEBUG_LOG: 1
       WORDPRESS_DEBUG_DISPLAY: 0
+      
+      # Увеличиваем лимиты для загрузки файлов
+      WORDPRESS_CONFIG_EXTRA: |
+        define('UPLOAD_LIMIT', '64M');
+        define('POST_MAX_SIZE', '64M');
+        define('MAX_EXECUTION_TIME', 300);
     volumes:
+      # Persistent data
       - wordpress_data:/var/www/html
+      # Career Tracker theme
       - ./:/var/www/html/wp-content/themes/career-tracker
+      # Загруженные файлы (для сохранения между перезапусками)
+      - uploads_data:/var/www/html/wp-content/uploads
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+    networks:
+      - career_tracker_network
 
+  # MySQL база данных
   db:
     image: mysql:8.0
+    container_name: career_tracker_db
     restart: always
     environment:
       MYSQL_DATABASE: wordpress
       MYSQL_USER: wordpress
       MYSQL_PASSWORD: wordpress_password
       MYSQL_ROOT_PASSWORD: root_password
+      # Настройки для улучшения производительности
+      MYSQL_INNODB_BUFFER_POOL_SIZE: 128M
     volumes:
       - db_data:/var/lib/mysql
+      # Кастомная конфигурация MySQL
+      - ./mysql-config.cnf:/etc/mysql/conf.d/custom.cnf:ro
     ports:
       - "3306:3306"
+    # Проверка здоровья БД
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "wordpress", "-pwordpress_password"]
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - career_tracker_network
 
+  # phpMyAdmin для управления БД
   phpmyadmin:
-    image: phpmyadmin:latest
+    image: phpmyadmin:5.2
+    container_name: career_tracker_pma
     restart: always
     ports:
       - "8081:80"
@@ -42,9 +74,24 @@ services:
       PMA_HOST: db
       PMA_USER: wordpress
       PMA_PASSWORD: wordpress_password
+      PMA_ARBITRARY: 1
+      UPLOAD_LIMIT: 64M
     depends_on:
       - db
+    networks:
+      - career_tracker_network
 
+# Именованные volumes для данных
 volumes:
   wordpress_data:
+    name: career_tracker_wp_data
   db_data:
+    name: career_tracker_db_data
+  uploads_data:
+    name: career_tracker_uploads
+
+# Изолированная сеть для сервисов
+networks:
+  career_tracker_network:
+    name: career_tracker_net
+    driver: bridge

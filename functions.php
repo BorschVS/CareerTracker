@@ -75,7 +75,7 @@ function ajax_create_project() {
     
     // Check user permissions
     if (!current_user_can('publish_posts')) {
-        wp_send_json_error('Insufficient permissions');
+        wp_send_json_error('You do not have permission to create projects');
     }
     
     $title = sanitize_text_field($_POST['title']);
@@ -98,7 +98,7 @@ function ajax_create_project() {
     $project_id = wp_insert_post($project_data);
     
     if (is_wp_error($project_id)) {
-        wp_send_json_error('Failed to create project');
+        wp_send_json_error('Unable to create project. Please try again.');
     }
     
     // Save GitHub URL as meta
@@ -108,7 +108,7 @@ function ajax_create_project() {
     
     wp_send_json_success(array(
         'project_id' => $project_id,
-        'message' => 'Project created successfully'
+        'message' => 'Project created successfully!'
     ));
 }
 add_action('wp_ajax_create_project', 'ajax_create_project');
@@ -125,7 +125,7 @@ function ajax_update_project() {
     $github_url = esc_url_raw($_POST['github_url']);
     
     if (!current_user_can('edit_post', $project_id)) {
-        wp_send_json_error('Insufficient permissions');
+        wp_send_json_error('You do not have permission to edit this project');
     }
     
     $project_data = array(
@@ -137,7 +137,7 @@ function ajax_update_project() {
     $result = wp_update_post($project_data);
     
     if (is_wp_error($result)) {
-        wp_send_json_error('Failed to update project');
+        wp_send_json_error('Unable to update project. Please try again.');
     }
     
     // Update GitHub URL
@@ -147,7 +147,7 @@ function ajax_update_project() {
         delete_post_meta($project_id, 'github_url');
     }
     
-    wp_send_json_success('Project updated successfully');
+    wp_send_json_success('Project updated successfully!');
 }
 add_action('wp_ajax_update_project', 'ajax_update_project');
 
@@ -192,7 +192,7 @@ function ajax_create_project_section() {
     
     // Check if user can edit the project
     if (!current_user_can('edit_post', $project_id)) {
-        wp_send_json_error('Insufficient permissions');
+        wp_send_json_error('You do not have permission to modify this project');
     }
     
     // Get next order number
@@ -215,12 +215,12 @@ function ajax_create_project_section() {
     );
     
     if ($result === false) {
-        wp_send_json_error('Failed to create section');
+        wp_send_json_error('Unable to create section. Please try again.');
     }
     
     wp_send_json_success(array(
         'section_id' => $wpdb->insert_id,
-        'message' => 'Section created successfully'
+        'message' => 'Section created successfully!'
     ));
 }
 add_action('wp_ajax_create_project_section', 'ajax_create_project_section');

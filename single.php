@@ -14,7 +14,7 @@ get_header(); ?>
                     <h1 class="project-title"><?php the_title(); ?></h1>
                     <div class="project-meta">
                         <span class="created-date">Created: <?php echo get_the_date(); ?></span>
-                        <span class="last-modified">Modified: <?php echo get_the_modified_date(); ?></span>
+                        <span class="last-modified">Last Modified: <?php echo get_the_modified_date(); ?></span>
                         <?php 
                         $github_url = get_post_meta(get_the_ID(), 'github_url', true);
                         if ($github_url && current_user_can('read_private_posts')) : ?>
@@ -44,7 +44,7 @@ get_header(); ?>
                     </div>
                 <?php else : ?>
                     <div class="empty-description">
-                        <p>No description available. Click "Edit Project" to add one.</p>
+                        <p>No description available. Click "Edit Project" to add a project description.</p>
                     </div>
                 <?php endif; ?>
             </div>
@@ -70,7 +70,7 @@ get_header(); ?>
             <div class="form-group">
                 <label for="section-title-input">Section Title</label>
                 <input type="text" id="section-title-input" name="section_title" required 
-                       placeholder="Enter section title...">
+                       placeholder="Enter section title (e.g., Overview, Features, Setup...)">
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Create Section</button>
@@ -89,18 +89,20 @@ get_header(); ?>
             <div class="form-group">
                 <label for="edit-project-title">Project Title</label>
                 <input type="text" id="edit-project-title" name="project_title" 
-                       value="<?php echo esc_attr(get_the_title()); ?>" required>
+                       value="<?php echo esc_attr(get_the_title()); ?>" required
+                       placeholder="Enter project title...">
             </div>
             <div class="form-group">
-                <label for="edit-project-description">Description</label>
+                <label for="edit-project-description">Project Description</label>
                 <div id="edit-project-description" class="rich-editor">
                     <?php echo get_the_content(); ?>
                 </div>
             </div>
             <div class="form-group">
-                <label for="edit-github-url">GitHub URL</label>
+                <label for="edit-github-url">GitHub Repository URL</label>
                 <input type="url" id="edit-github-url" name="github_url" 
-                       value="<?php echo esc_attr(get_post_meta(get_the_ID(), 'github_url', true)); ?>">
+                       value="<?php echo esc_attr(get_post_meta(get_the_ID(), 'github_url', true)); ?>"
+                       placeholder="https://github.com/username/repository">
             </div>
             <div class="form-actions">
                 <button type="submit" class="btn btn-primary">Save Changes</button>
@@ -275,6 +277,7 @@ get_header(); ?>
 .empty-project p {
     color: rgba(255, 255, 255, 0.8);
     margin-bottom: 30px;
+    line-height: 1.6;
 }
 
 /* Content Items */
